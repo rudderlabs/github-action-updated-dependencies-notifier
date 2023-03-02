@@ -69,7 +69,7 @@ steps:
   - uses: actions/checkout@v3
   - name: Check outdated dependencies and create issue
     id: check-outdated-dependencies-and-create-issue
-    uses: 1abhishekpandey/github-action-updated-dependencies-notifier@main
+    uses: rudderlabs/github-action-updated-dependencies-notifier@main
     with:
       outdated-dependency-names: "com.amplitude:android-sdk"
       directory: "amplitude/build.gradle"
@@ -92,7 +92,7 @@ steps:
   - uses: actions/checkout@v3
   - name: Check outdated dependencies and create issue
    id: check-outdated-dependencies-and-create-issue
-    uses: 1abhishekpandey/github-action-updated-dependencies-notifier@main
+    uses: rudderlabs/github-action-updated-dependencies-notifier@main
     with:
       outdated-dependency-names: "com.amplitude:android-sdk"
       directory: "amplitude/build.gradle"
