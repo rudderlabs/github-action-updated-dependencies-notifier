@@ -1,0 +1,54 @@
+name: "Check outdated dependencies and create issue"
+description: "Check for outdated dependencies and create issue in GitHub with the provided title (and other parameters) if it doesn't exist"
+
+inputs:
+  outdated-dependency-names:
+    description: "Enter the dependency separated by comma and in the following format: '<groupID>:artifactID"
+    required: true
+  directory: 
+    description: "Enter the directory where build.gradle file containing the dependency is located"
+    required: true
+  library:
+    description: "Enter the name of the library where build.gradle file is located"
+  repository-urls:
+    description: "Enter the repository url of the dependency"
+  alternative-dependency-lookup:
+    description: "Enter the dependency if the normal process does not work. This is an alternate process to look for the updated dependency, which will override the default method for inputting dependencies. Make sure to pass the complete repository URL"
+  alternative-dependency-lookup-url:
+    description: "Alternate way to look for updated dependency. Pass the complete working url"
+
+  title: 
+    description: "Title of the issue. This value is required to create or edit the issue"
+  body:
+    description: "Description of the issue. Leave it blank for predefined update message"
+  assignee: 
+    description: "Provide the Github ID of the person who will be assigned to the new issue"
+  labels:
+    description: "Provide the label for the issue"
+  color:
+    description: "Provide the colors for the label"
+    default: FBCA04
+  
+outputs:
+  issue-url: # id of output
+    description: "The URL of the created or edited GitHub issue"
+    value: ${{ steps.set-output-variables.outputs.issue_url }}
+  has-outdated-dependencies: # id of output
+    description: "A flag that indicates whether any outdated description were detected"
+    value: ${{ steps.set-output-variables.outputs.booleanValue }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run shell script
+      id: "set-output-variables"
+      env:
+        ISSUE_URL: ${{ env.ISSUE_URL }}
+        HAS_OUTDATED_DEPENDENCIES: ${{ env.HAS_OUTDATED_DEPENDENCIES }}
+      run: |
+        chmod 0755 ${{ github.action_path }}/scripts/mavenOutdatedDependecy.sh
+        source "${{ github.action_path }}/scripts/mavenOutdatedDependecy.sh" "${{ inputs.outdated-dependency-names }}" "${{ inputs.directory }}" "${{ inputs.library }}" "${{ inputs.repository-urls }}" "${{ inputs.alternative-dependency-lookup }}" "${{ inputs.alternative-dependency-lookup-url }}" "${{ inputs.title }}" "${{ inputs.assignee }}" "${{ inputs.body }}" "${{ inputs.labels }}" "${{ inputs.color }}"
+      
+        echo "issue_url=$ISSUE_URL" >> $GITHUB_OUTPUT
+        echo "booleanValue=$HAS_OUTDATED_DEPENDENCIES" >> $GITHUB_OUTPUT
+      shell: sh
