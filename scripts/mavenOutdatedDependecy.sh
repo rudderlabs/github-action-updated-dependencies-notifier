@@ -101,10 +101,10 @@ function get_individual_dependecy() {
     DEPENDENCY=$(grep "$individual_dependency" "$RELATIVE_PATH")
 
     # If dependency is enclosed in single quotes
-    INDIVIDUAL_DEPENDENCY=$(echo "$DEPENDENCY" | sed -n "s/.*'\([^']*\)'.*/\1/p")
+    INDIVIDUAL_DEPENDENCY=$(echo "$DEPENDENCY" | sed -n "s/.*'\([^']*\)'.*/\1/p" | tr -d ' ')
     # If dependency is enclosed in double quotes
     if [ -z "$INDIVIDUAL_DEPENDENCY" ]; then
-        INDIVIDUAL_DEPENDENCY=$(echo "$DEPENDENCY" | sed -n 's/.*"\([^"]*\)".*/\1/p')
+        INDIVIDUAL_DEPENDENCY=$(echo "$DEPENDENCY" | sed -n 's/.*"\([^"]*\)".*/\1/p' | tr -d ' ')
     fi
 
     echo "$INDIVIDUAL_DEPENDENCY"
